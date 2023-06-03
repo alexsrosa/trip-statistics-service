@@ -19,8 +19,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>trip-statistics-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>trip-statistics-model</artifactId>
+        </dependency>
+
 
     </dependencies>
 </project>

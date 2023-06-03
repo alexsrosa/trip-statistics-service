@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - postgres
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
@@ -16,13 +16,13 @@ services:
     networks:
       - backend
 
-  db:
+  postgres:
     image: postgres:14-alpine
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=challenge
+      - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
       - NAME_DB=trip_statistics
       - PASS_DB=DT123@
