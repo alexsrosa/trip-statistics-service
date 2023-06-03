@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+
+  server:
+    image: 'transport-statistics-1.0.0.jar'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=challenge
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - backend
+
+  db:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=challenge
+      - POSTGRES_DB=postgres
+      - NAME_DB=trip_statistics
+      - PASS_DB=DT123@
+    volumes:
+      - ./.assets/conf/local/db:/docker-entrypoint-initdb.d/
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  backend:
