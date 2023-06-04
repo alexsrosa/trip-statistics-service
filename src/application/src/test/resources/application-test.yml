@@ -1,0 +1,25 @@
+spring:
+  liquibase:
+    change-log: classpath:test-migrations.xml
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:dtr_mem;AUTO_RECONNECT=TRUE
+    username: sa
+    password:
+
+  jpa:
+    open-in-view: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        enable_lazy_load_no_trans: true
+        cache:
+          use_query_cache: false
+          provider_class: org.hibernate.cache.NoCacheProvider
+    hibernate:
+      ddl-auto: create
+
+  main:
+    allow-bean-definition-overriding: true

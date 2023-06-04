@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -26,17 +25,10 @@ import java.util.function.Consumer;
 public class ImportZonesUseCase {
 
     private final ZoneService zoneService;
-
     private final Consumer<String> actionSaveNewZone = this::saveByString;
-
-    @PostConstruct
-    public void init() {
-        importZones();
-    }
 
     public void importZones() {
         log.info(">> Starts to load zones!");
-        zoneService.deleteAll();
         try {
             int totalLines = FileReaderUtils.readFileOnResources("files/zone.csv", actionSaveNewZone, true);
 
@@ -48,16 +40,17 @@ public class ImportZonesUseCase {
         log.info("<< Load zones finished.");
     }
 
-    public void saveByString(String line) {
+    private void saveByString(String line) {
         String[] zoneLine = line.replace("\"", Strings.EMPTY).split(",");
         try {
             zoneService.save(ZoneEntity.builder()
+                    .id(Long.valueOf(zoneLine[0]))
                     .borough(zoneLine[1])
                     .zone(zoneLine[2])
                     .serviceZone(ServiceZoneEnum.getByValue(zoneLine[3]))
                     .build());
         } catch (Exception ex) {
-            log.error("Error to load one zone. Details: {}", Arrays.toString(zoneLine));
+            log.error("Error to load one zone. Details: {}, DataSet: {}", ex.getMessage(), Arrays.toString(zoneLine));
         }
     }
 }

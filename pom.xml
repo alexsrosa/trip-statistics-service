@@ -33,11 +33,14 @@
         <lombok.version>1.18.28</lombok.version>
 
         <spring-boot.version>2.7.5</spring-boot.version>
+
         <liquibase-core.version>4.4.0</liquibase-core.version>
         <liquibase-maven-plugin.version>4.4.0</liquibase-maven-plugin.version>
         <liquibase-hibernate5.version>4.4.3</liquibase-hibernate5.version>
+
         <validation-api.version>2.0.1.Final</validation-api.version>
         <hibernate-jpamodelgen>5.5.7.Final</hibernate-jpamodelgen>
+        <springdoc-version>1.6.4</springdoc-version>
     </properties>
 
     <dependencyManagement>
@@ -84,6 +87,18 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>5.7.1</version>
             </dependency>
 
             <dependency>

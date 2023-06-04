@@ -1,6 +1,6 @@
 package com.department.transportation.trip.statistics.model.repositories;
 
-import com.department.transportation.trip.statistics.model.entities.ZoneEntity;
+import com.department.transportation.trip.statistics.model.entities.TaxisEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @since 03/06/2023 16:29
  */
 @Repository
-public interface TaxisRepository extends JpaRepository<ZoneEntity, Long> {
+public interface TaxisRepository extends JpaRepository<TaxisEntity, Long> {
 }

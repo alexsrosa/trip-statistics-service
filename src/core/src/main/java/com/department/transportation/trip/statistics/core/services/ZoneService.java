@@ -4,6 +4,7 @@ import com.department.transportation.trip.statistics.model.entities.ZoneEntity;
 import com.department.transportation.trip.statistics.model.repositories.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -16,11 +17,8 @@ public class ZoneService {
 
     private final ZoneRepository zoneRepository;
 
-    public void deleteAll() {
-        zoneRepository.deleteAll();
-    }
-
-    public void save(ZoneEntity entity) {
-        zoneRepository.save(entity);
+    @Transactional
+    public void save(ZoneEntity zoneEntity) {
+        zoneRepository.save(zoneEntity);
     }
 }

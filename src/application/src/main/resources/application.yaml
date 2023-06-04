@@ -11,11 +11,12 @@ spring:
     password: ${PASS_DB:DT123@}
     driverClassName: org.postgresql.Driver
     hikari:
-      maximum-pool-size: ${HIKARI_MAXIMUM_POOLSIZE:20}
+      maximum-pool-size: ${HIKARI_MAXIMUM_POOLSIZE:50}
       leak-detection-threshold: ${HIKARI_LEAK_THRESHOLD:60000}
       max-lifetime: ${HIKARI_MAX_LIFETIME:120000}
       connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:50000}
   jpa:
+    open-in-view: true
     database: postgresql
     hibernate:
       ddl-auto: validate
@@ -23,7 +24,26 @@ spring:
     properties:
       hibernate:
         format_sql: ${JPA_FORMAT_SQL:false}
-    open-in-view: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 10000
+          order_inserts: false
+          order_updates: true
+          batch_versioned_data: true
+        generate_statistics: false
+        cache:
+          use_second_level_cache: false
+        hbm2ddl:
+          auto: none
+
+  task:
+    execution:
+      pool:
+        max-size: 20
+        queue-capacity: 1000
+  session:
+    jdbc:
+      flush-mode: COMMIT
 
 server:
   servlet:
