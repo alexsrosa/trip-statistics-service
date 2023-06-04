@@ -54,7 +54,7 @@ public class CSVReaderUtils {
             totalLines = lines.size();
             log.info("Total lines to process: {}", totalLines);
 
-            List<List<String[]>> dividedLinesList = PartitionCollectionsUtils.partitionByBlock(lines, numThreads);
+            List<List<String[]>> dividedLinesList = PartitionCollectionsUtils.partitionListWithTotalParts(lines, numThreads);
             dividedLinesList.forEach(dividedLines -> executor.execute(() -> function.accept(dividedLines)));
 
             executor.shutdown();

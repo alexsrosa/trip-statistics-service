@@ -48,3 +48,7 @@ To migrate changes use the following:
 ```
 mvn liquibase:update -Plocal 
 ```
+
+## Open API
+
+Access Url: http://localhost:8080/api/swagger-ui/index.html#/

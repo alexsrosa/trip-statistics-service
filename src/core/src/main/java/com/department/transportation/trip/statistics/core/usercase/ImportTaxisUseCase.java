@@ -28,7 +28,6 @@ public class ImportTaxisUseCase {
 
     private final Map<String, Consumer<List<String[]>>> filesToRead = Map.of("green", actionSaveNewGreenTaxis, "yellow", actionSaveNewYellowTaxis);
 
-
     private final TaxisService taxisService;
 
     public void importTaxis() {
@@ -55,7 +54,8 @@ public class ImportTaxisUseCase {
     }
 
     private void saveAll(List<TaxisEntity> taxisEntityList) {
-        PartitionCollectionsUtils.partitionByBlock(taxisEntityList, 10000)
+        PartitionCollectionsUtils.partitionListWithSizeBlockLimited(taxisEntityList, 5000)
+                .parallelStream()
                 .forEach(taxisService::saveAll);
     }
 }
