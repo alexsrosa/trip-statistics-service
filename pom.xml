@@ -21,45 +21,127 @@
         <module>src/application</module>
         <module>src/api</module>
         <module>src/core</module>
+        <module>src/model</module>
     </modules>
 
     <properties>
         <java.version>17</java.version>
+        <java.maven.version>17</java.maven.version>
+        <maven.compiler.source>${java.maven.version}</maven.compiler.source>
+        <maven.compiler.target>${java.maven.version}</maven.compiler.target>
+
         <lombok.version>1.18.28</lombok.version>
+
+        <spring-boot.version>2.7.5</spring-boot.version>
+
+        <liquibase-core.version>4.4.0</liquibase-core.version>
+        <liquibase-maven-plugin.version>4.4.0</liquibase-maven-plugin.version>
+        <liquibase-hibernate5.version>4.4.3</liquibase-hibernate5.version>
+
+        <validation-api.version>2.0.1.Final</validation-api.version>
+        <hibernate-jpamodelgen>5.5.7.Final</hibernate-jpamodelgen>
+        <springdoc-version>1.6.4</springdoc-version>
+        <maven-model.version>3.3.9</maven-model.version>
+        <orika-core.version>1.5.4</orika-core.version>
     </properties>
 
-    <dependencies>
+    <dependencyManagement>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+        <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>trip-statistics-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>trip-statistics-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>trip-statistics-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>trip-statistics-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
 
-    </dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-cache</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>5.7.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ma.glasnost.orika</groupId>
+                <artifactId>orika-core</artifactId>
+                <version>${orika-core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model</artifactId>
+                <version>${maven-model.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase-core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
@@ -78,6 +160,34 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <configuration>
+                        <changeLogFile>./src/main/resources/migrations/migrations-master.xml</changeLogFile>
+                        <outputChangeLogFile>./target/migrations-${project.version}.xml</outputChangeLogFile>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
+
+    <profiles>
+
+        <!-- Local Configuration -->
+        <profile>
+            <id>local</id>
+            <properties>
+                <!-- Liquibase -->
+                <liquibase.url>jdbc:postgresql://localhost:5432/trip_statistics?autoReconnect=true</liquibase.url>
+                <liquibase.username>user_trip_statistics_admin</liquibase.username>
+                <liquibase.password>DT123@</liquibase.password>
+            </properties>
+        </profile>
+
+    </profiles>
 
 </project>

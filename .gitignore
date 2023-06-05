@@ -3,6 +3,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .mvn
+*_changelog.xml
 
 ### STS ###
 .apt_generated
@@ -19,6 +20,8 @@ target/
 *.iws
 *.iml
 *.ipr
+*.log
+*.DS_Store
 
 ### NetBeans ###
 /nbproject/private/

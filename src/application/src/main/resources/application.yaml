@@ -1,12 +1,33 @@
 spring:
+  # Database versioning configuration
+  liquibase:
+    change-log: classpath:migrations/migrations-master.xml
   datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: challenge
+    hikari:
+      maximum-pool-size: ${HIKARI_MAXIMUM_POOLSIZE:50}
+      leak-detection-threshold: ${HIKARI_LEAK_THRESHOLD:60000}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:120000}
+      connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:50000}
   jpa:
-    database: postgresql
+    open-in-view: true
+    show-sql: ${JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: ${JPA_FORMAT_SQL:false}
+
+  task:
+    execution:
+      pool:
+        max-size: 20
+        queue-capacity: 1000
+  session:
+    jdbc:
+      flush-mode: COMMIT
 
 server:
   servlet:
-    context-path: /challenge
+    context-path: /api
+
+logging:
+  level:
+    root: ${LOG_LEVEL:info}

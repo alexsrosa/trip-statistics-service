@@ -1,0 +1,4 @@
+src/application/src/test/resources/files/yellow.csv filter=lfs diff=lfs merge=lfs -text
+src/application/src/test/resources/files/green.csv filter=lfs diff=lfs merge=lfs -text
+src/application/src/main/resources/files/yellow.csv filter=lfs diff=lfs merge=lfs -text
+src/application/src/main/resources/files/green.csv filter=lfs diff=lfs merge=lfs -text
