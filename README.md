@@ -14,7 +14,6 @@ A simple tool that allows the visualization of boarding and disembarking of pass
 
 Run the following commands in the command line:
 
-    - mvn clean install 
     - docker-compose up --build --force-recreate -d
 
 ## **Instructions**
