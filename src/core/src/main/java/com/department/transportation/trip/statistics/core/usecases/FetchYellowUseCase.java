@@ -1,6 +1,7 @@
 package com.department.transportation.trip.statistics.core.usecases;
 
 import com.department.transportation.trip.statistics.api.dtos.OutListYellowDto;
+import com.department.transportation.trip.statistics.core.mappers.PageableAndSortFieldMapper;
 import com.department.transportation.trip.statistics.core.services.TaxisService;
 import com.department.transportation.trip.statistics.core.utils.LocalDateTimeUtils;
 import com.department.transportation.trip.statistics.model.converters.TaxisConverter;
@@ -34,9 +35,8 @@ public class FetchYellowUseCase {
                                                      Long pickupLocation, Long dropOffLocation,
                                                      Pageable pageable) {
 
-        log.info("Received param: pickupDatetime={}, dropOffDatetime={}, pickupLocation={}, dropOffLocation={} ",
-                pickupDatetime, dropOffDatetime, pickupLocation, dropOffLocation);
-
+        log.info("Received param: pickupDatetime={}, dropOffDatetime={}, pickupLocation={}, dropOffLocation={}, {} ",
+                pickupDatetime, dropOffDatetime, pickupLocation, dropOffLocation, pageable.toString());
 
         TaxisEntity taxisEntity = TaxisEntity.builder()
                 .id(nonNull(id) ? UUID.fromString(id) : null)
@@ -47,7 +47,7 @@ public class FetchYellowUseCase {
                 .taxisType(TaxisTypeEnum.YELLOW)
                 .build();
 
-        Page<TaxisEntity> taxisEntities = taxisService.fetchTaxisByFilterAndPageable(Example.of(taxisEntity), pageable);
+        Page<TaxisEntity> taxisEntities = taxisService.fetchTaxisByFilterAndPageable(Example.of(taxisEntity), PageableAndSortFieldMapper.map(pageable));
         return taxisEntities.isEmpty() ? Page.empty() : taxisEntities.map(TaxisConverter.convertDBOToDTO);
     }
 }
