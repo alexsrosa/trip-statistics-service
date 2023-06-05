@@ -4,6 +4,7 @@ import com.department.transportation.trip.statistics.core.exceptions.BadRequestE
 import com.department.transportation.trip.statistics.core.exceptions.ExceptionListResponse;
 import com.department.transportation.trip.statistics.core.exceptions.ExceptionResponse;
 import com.department.transportation.trip.statistics.core.exceptions.NotFoundException;
+import com.department.transportation.trip.statistics.core.exceptions.ZoneNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler({NotFoundException.class})
+    @ExceptionHandler({NotFoundException.class, ZoneNotFoundException.class})
     public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(ex.getMessage()));
     }

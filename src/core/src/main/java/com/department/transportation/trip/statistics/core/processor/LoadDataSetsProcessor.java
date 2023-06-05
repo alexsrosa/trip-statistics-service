@@ -23,7 +23,6 @@ public class LoadDataSetsProcessor {
 
     @PostConstruct
     public void init() {
-// TODO: go back this codigo
 //        importZonesUseCase.importZones();
 //        importTaxisUseCase.importTaxis();
     }

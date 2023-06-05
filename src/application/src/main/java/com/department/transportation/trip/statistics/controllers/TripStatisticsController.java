@@ -1,6 +1,8 @@
 package com.department.transportation.trip.statistics.controllers;
 
 
+import com.department.transportation.trip.statistics.api.InTopZonesQueryParam;
+import com.department.transportation.trip.statistics.api.InZoneTripsQueryParam;
 import com.department.transportation.trip.statistics.api.OutListYellowDto;
 import com.department.transportation.trip.statistics.api.OutTopZonesListDto;
 import com.department.transportation.trip.statistics.api.OutZoneTripDto;
@@ -10,19 +12,22 @@ import com.department.transportation.trip.statistics.core.usercase.TopZonesUseCa
 import com.department.transportation.trip.statistics.core.usercase.ZoneTripUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.validation.Valid;
 
 /**
  *
  * @author <a href="mailto:alexsros@gmail.com">Alex Rosa</a>
  * @since 04/06/2023 20:13
  */
+//@Validated
 @RequiredArgsConstructor
 @Slf4j
 @RestController
@@ -34,21 +39,23 @@ public class TripStatisticsController implements TripStatisticsControllerDoc {
     private final FetchYellowUseCase fetchYellowUseCase;
 
     @GetMapping("/top_zones")
-    public ResponseEntity<OutTopZonesListDto> fetchTopZoneByOrder(@RequestParam("order") String order) {
-        return ResponseEntity.ok(topZonesUseCase.fetchTopZoneByOrder(order));
+    public ResponseEntity<OutTopZonesListDto> fetchTopZoneByOrder(@Valid InTopZonesQueryParam inTopZonesQueryParam) {
+        return ResponseEntity.ok(topZonesUseCase.fetchTopZoneByOrder(inTopZonesQueryParam));
     }
 
     @GetMapping("/zone-trips")
-    public ResponseEntity<OutZoneTripDto> fetchZoneTripsByZoneAndDate(@RequestParam(required = false) String zone,
-                                                                      @RequestParam(required = false) String date) {
-        return ResponseEntity.ok(zoneTripUseCase.fetchZoneTripsWithFilter(zone, date));
+    public ResponseEntity<OutZoneTripDto> fetchZoneTripsByZoneAndDate(@Valid InZoneTripsQueryParam inZoneTripsQueryParam) {
+        return ResponseEntity.ok(zoneTripUseCase.fetchZoneTripsWithFilter(inZoneTripsQueryParam));
     }
 
     @GetMapping("/list-yellow")
-    public ResponseEntity<List<OutListYellowDto>> fetchYellowByParam(@RequestParam(value = "pu_date", required = false) String pickupDatetime,
+    public ResponseEntity<Page<OutListYellowDto>> fetchYellowByParam(@RequestParam(value = "id", required = false) String id,
+                                                                     @RequestParam(value = "pu_date", required = false) String pickupDatetime,
                                                                      @RequestParam(value = "do_date", required = false) String dropOffDatetime,
-                                                                     @RequestParam(value = "pu_location", required = false) Integer pickupLocation,
-                                                                     @RequestParam(value = "do_location", required = false) Integer dropOffLocation) {
-        return ResponseEntity.ok(fetchYellowUseCase.fetchYellowByParam(pickupDatetime, dropOffDatetime, pickupLocation, dropOffLocation));
+                                                                     @RequestParam(value = "pu_location", required = false) Long pickupLocation,
+                                                                     @RequestParam(value = "do_location", required = false) Long dropOffLocation,
+                                                                     Pageable pageable) {
+        return ResponseEntity.ok(fetchYellowUseCase.fetchYellowByParam(
+                id, pickupDatetime, dropOffDatetime, pickupLocation, dropOffLocation, pageable));
     }
 }

@@ -1,17 +1,18 @@
 package com.department.transportation.trip.statistics.controllers.docs;
 
 
+import com.department.transportation.trip.statistics.api.InTopZonesQueryParam;
+import com.department.transportation.trip.statistics.api.InZoneTripsQueryParam;
 import com.department.transportation.trip.statistics.api.OutListYellowDto;
 import com.department.transportation.trip.statistics.api.OutTopZonesListDto;
 import com.department.transportation.trip.statistics.api.OutZoneTripDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 /**
  *
@@ -21,43 +22,32 @@ import java.util.List;
 @Tag(name = "Trip Statistics")
 public interface TripStatisticsControllerDoc {
 
-    @Operation(summary = "It records the opening hours of stores, on an exceptional basis.",
-            security = {
-                    @SecurityRequirement(name = "oAuth2", scopes = {"ROLE_ADMIN"}),
-                    @SecurityRequirement(name = "bearerAuth", scopes = {"ROLE_ADMIN"})
-            }, responses = {
-            @ApiResponse(description = "Request processed correctly.", responseCode = "200"),
-            @ApiResponse(description = "The request is incomplete or invalid.", responseCode = "400"),
-            @ApiResponse(description = "When there is a temporal overlap of schedule interval.", responseCode = "409")
-    })
+    @Operation(summary = "Returns top zones",
+            responses = {
+                    @ApiResponse(description = "Request processed correctly.", responseCode = "200"),
+                    @ApiResponse(description = "The request is incomplete or invalid.", responseCode = "400")
+            })
     @ApiResponsesWithOk
-    ResponseEntity<OutTopZonesListDto> fetchTopZoneByOrder(@RequestParam("order") String order);
+    ResponseEntity<OutTopZonesListDto> fetchTopZoneByOrder(InTopZonesQueryParam inTopZonesQueryParam);
 
-    @Operation(summary = "It records the opening hours of stores, on an exceptional basis.",
-            security = {
-                    @SecurityRequirement(name = "oAuth2", scopes = {"ROLE_ADMIN"}),
-                    @SecurityRequirement(name = "bearerAuth", scopes = {"ROLE_ADMIN"})
-            }, responses = {
-            @ApiResponse(description = "Request processed correctly.", responseCode = "200"),
-            @ApiResponse(description = "The request is incomplete or invalid.", responseCode = "400"),
-            @ApiResponse(description = "When there is a temporal overlap of schedule interval.", responseCode = "409")
-    })
+    @Operation(summary = "Returns zone trips",
+            responses = {
+                    @ApiResponse(description = "Request processed correctly.", responseCode = "200"),
+                    @ApiResponse(description = "The request is incomplete or invalid.", responseCode = "400")
+            })
     @ApiResponsesWithOk
-    ResponseEntity<OutZoneTripDto> fetchZoneTripsByZoneAndDate(@RequestParam(required = false) String zone,
-                                                               @RequestParam(required = false) String date);
+    ResponseEntity<OutZoneTripDto> fetchZoneTripsByZoneAndDate(InZoneTripsQueryParam inZoneTripsQueryParam);
 
-    @Operation(summary = "It records the opening hours of stores, on an exceptional basis.",
-            security = {
-                    @SecurityRequirement(name = "oAuth2", scopes = {"ROLE_ADMIN"}),
-                    @SecurityRequirement(name = "bearerAuth", scopes = {"ROLE_ADMIN"})
-            }, responses = {
-            @ApiResponse(description = "Request processed correctly.", responseCode = "200"),
-            @ApiResponse(description = "The request is incomplete or invalid.", responseCode = "400"),
-            @ApiResponse(description = "When there is a temporal overlap of schedule interval.", responseCode = "409")
-    })
+    @Operation(summary = "Fetch Yellow Taxies",
+            responses = {
+                    @ApiResponse(description = "Request processed correctly.", responseCode = "200"),
+                    @ApiResponse(description = "The request is incomplete or invalid.", responseCode = "400")
+            })
     @ApiResponsesWithOk
-    ResponseEntity<List<OutListYellowDto>> fetchYellowByParam(@RequestParam(value = "pu_date", required = false) String pickupDatetime,
+    ResponseEntity<Page<OutListYellowDto>> fetchYellowByParam(@RequestParam(value = "id", required = false) String id,
+                                                              @RequestParam(value = "pu_date", required = false) String pickupDatetime,
                                                               @RequestParam(value = "do_date", required = false) String dropOffDatetime,
-                                                              @RequestParam(value = "pu_location", required = false) Integer pickupLocation,
-                                                              @RequestParam(value = "do_location", required = false) Integer dropOffLocation);
+                                                              @RequestParam(value = "pu_location", required = false) Long pickupLocation,
+                                                              @RequestParam(value = "do_location", required = false) Long dropOffLocation,
+                                                              Pageable pageable);
 }

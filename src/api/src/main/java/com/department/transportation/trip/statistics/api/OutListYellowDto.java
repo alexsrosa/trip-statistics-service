@@ -19,6 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  *
@@ -35,7 +36,7 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OutListYellowDto implements Serializable {
 
-    private Long id;
+    private UUID id;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -52,8 +53,8 @@ public class OutListYellowDto implements Serializable {
     private LocalDateTime dropOffDatetime;
 
     @JsonProperty("pu_location")
-    private Integer pickupLocation;
+    private Long pickupLocation;
 
     @JsonProperty("do_location")
-    private Integer dropOffLocation;
+    private Long dropOffLocation;
 }

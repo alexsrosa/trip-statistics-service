@@ -13,10 +13,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,7 +32,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "zones")
+@Table(name = "zones", indexes = {
+        @Index(name = "index_zones_zone", columnList = "zone"),
+})
 public class ZoneEntity extends BaseEntity {
 
     @Id
@@ -45,6 +49,12 @@ public class ZoneEntity extends BaseEntity {
     @Column(nullable = false, length = 11)
     @Enumerated(EnumType.STRING)
     private ServiceZoneEnum serviceZone;
+
+    @OneToMany(mappedBy = "pickupLocation", fetch = FetchType.LAZY)
+    private List<TaxisEntity> taxisPickupLocation;
+
+    @OneToMany(mappedBy = "dropOffLocation", fetch = FetchType.LAZY)
+    private List<TaxisEntity> taxisDropOffLocation;
 
     @Override
     public boolean equals(Object o) {

@@ -13,4 +13,10 @@
     <!-- Setup Database -->
     <include file="migrations-v1.xml" relativeToChangelogFile="true"/>
 
+    <!-- Added new field taxis_type on table taxis -->
+    <include file="migrations-v2.xml" relativeToChangelogFile="true"/>
+
+    <!-- Added new index on table zones -->
+    <include file="migrations-v3.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

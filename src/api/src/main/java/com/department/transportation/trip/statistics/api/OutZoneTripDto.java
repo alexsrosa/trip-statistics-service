@@ -7,13 +7,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -23,12 +24,12 @@ import java.time.LocalDate;
  */
 @ToString
 @EqualsAndHashCode
-@SuperBuilder
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OutZoneTripDto {
+public class OutZoneTripDto implements Serializable {
 
     private String zone;
 
@@ -38,8 +39,13 @@ public class OutZoneTripDto {
     private LocalDate date;
 
     @JsonProperty("pu")
-    private Integer pickups;
+    private Long pickUps;
 
     @JsonProperty("do")
-    private Integer dropoffs;
+    private Long dropOffs;
+
+    public OutZoneTripDto(Long pickups, Long dropOffs) {
+        this.pickUps = pickups;
+        this.dropOffs = dropOffs;
+    }
 }

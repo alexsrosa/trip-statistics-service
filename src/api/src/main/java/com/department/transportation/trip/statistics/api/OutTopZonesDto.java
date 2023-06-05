@@ -26,8 +26,8 @@ public class OutTopZonesDto {
     private String zone;
 
     @JsonProperty("pu_total")
-    private Integer pickupTotal;
+    private Long pickupTotal;
 
     @JsonProperty("do_total")
-    private Integer dropOffTotal;
+    private Long dropOffTotal;
 }
