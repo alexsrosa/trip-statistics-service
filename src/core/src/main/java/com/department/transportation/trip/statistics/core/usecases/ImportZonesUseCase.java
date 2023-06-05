@@ -1,4 +1,4 @@
-package com.department.transportation.trip.statistics.core.usercase;
+package com.department.transportation.trip.statistics.core.usecases;
 
 import com.department.transportation.trip.statistics.core.exceptions.ZonesLoadException;
 import com.department.transportation.trip.statistics.core.services.ZoneService;

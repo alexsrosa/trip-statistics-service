@@ -7,9 +7,9 @@ import com.department.transportation.trip.statistics.api.dtos.OutZoneTripDto;
 import com.department.transportation.trip.statistics.api.queryparams.InTopZonesQueryParam;
 import com.department.transportation.trip.statistics.api.queryparams.InZoneTripsQueryParam;
 import com.department.transportation.trip.statistics.controllers.docs.TripStatisticsControllerDoc;
-import com.department.transportation.trip.statistics.core.usercase.FetchYellowUseCase;
-import com.department.transportation.trip.statistics.core.usercase.TopZonesUseCase;
-import com.department.transportation.trip.statistics.core.usercase.ZoneTripUseCase;
+import com.department.transportation.trip.statistics.core.usecases.FetchYellowUseCase;
+import com.department.transportation.trip.statistics.core.usecases.TopZonesUseCase;
+import com.department.transportation.trip.statistics.core.usecases.ZoneTripUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Slf4j
 @RestController
-@RequestMapping(value = "/v1/trip")
+@RequestMapping(value = "/v1/trips")
 public class TripStatisticsController implements TripStatisticsControllerDoc {
 
     private final TopZonesUseCase topZonesUseCase;

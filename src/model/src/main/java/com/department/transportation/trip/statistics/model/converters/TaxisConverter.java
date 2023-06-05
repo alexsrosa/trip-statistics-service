@@ -9,6 +9,11 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 import java.util.function.Function;
 
+/**
+ *
+ * @author <a href="mailto:alexsros@gmail.com">Alex Rosa</a>
+ * @since 05/06/2023 21:07
+ */
 @UtilityClass
 public class TaxisConverter {
 

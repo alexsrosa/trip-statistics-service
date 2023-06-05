@@ -17,6 +17,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        ddl-auto: none
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
         enable_lazy_load_no_trans: true

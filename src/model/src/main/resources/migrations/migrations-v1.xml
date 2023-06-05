@@ -5,7 +5,7 @@
 
     <changeSet author="Alex Rosa" id="1685804109738-1">
         <createTable tableName="taxis">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="false" name="id" type="uuid">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="taxis_pkey"/>
             </column>
             <column name="drop_off_datetime" type="TIMESTAMP WITHOUT TIME ZONE">

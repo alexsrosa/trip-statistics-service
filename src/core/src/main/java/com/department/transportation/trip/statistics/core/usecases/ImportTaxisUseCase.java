@@ -1,4 +1,4 @@
-package com.department.transportation.trip.statistics.core.usercase;
+package com.department.transportation.trip.statistics.core.usecases;
 
 import com.department.transportation.trip.statistics.core.mappers.TaxisMapper;
 import com.department.transportation.trip.statistics.core.services.TaxisService;
@@ -48,7 +48,7 @@ public class ImportTaxisUseCase {
         topZonesUseCase.evictCaches();
         zoneTripUseCase.evictCaches();
 
-        log.info("<< Load yellow finished.");
+        log.info("<< Load taxis finished.");
     }
 
     private void saveGreenByArrayString(List<String[]> columnsList) {

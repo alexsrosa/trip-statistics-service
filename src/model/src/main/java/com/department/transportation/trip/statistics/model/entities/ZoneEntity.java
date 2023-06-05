@@ -68,4 +68,13 @@ public class ZoneEntity extends BaseEntity {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "borough = " + borough + ", " +
+                "zone = " + zone + ", " +
+                "serviceZone = " + serviceZone + ")";
+    }
 }

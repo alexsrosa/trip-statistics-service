@@ -1,7 +1,7 @@
 package com.department.transportation.trip.statistics.core.processor;
 
-import com.department.transportation.trip.statistics.core.usercase.ImportTaxisUseCase;
-import com.department.transportation.trip.statistics.core.usercase.ImportZonesUseCase;
+import com.department.transportation.trip.statistics.core.usecases.ImportTaxisUseCase;
+import com.department.transportation.trip.statistics.core.usecases.ImportZonesUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -24,7 +24,7 @@ public class LoadDataSetsProcessor {
     private final ImportTaxisUseCase importTaxisUseCase;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void startProcess()  {
+    public void startProcess() {
         long startTime = System.currentTimeMillis();
 
         importZonesUseCase.importZones();
@@ -32,6 +32,6 @@ public class LoadDataSetsProcessor {
 
         long endTime = System.currentTimeMillis();
         long elapsedTimeInSeconds = (endTime - startTime) / 1000;
-        log.info("Total load processing time: {} seconds ({} minutes)", elapsedTimeInSeconds, elapsedTimeInSeconds / 60);
+        log.info("<< Total dataset loading processing time: {} seconds ({} minutes)", elapsedTimeInSeconds, elapsedTimeInSeconds / 60);
     }
 }

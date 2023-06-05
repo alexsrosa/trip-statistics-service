@@ -62,10 +62,10 @@ public class CSVReaderUtils {
 
             executor.shutdown();
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException interruptedException){
+        } catch (InterruptedException interruptedException) {
             log.error("Error executing process in threads! Details: {}", interruptedException.getMessage());
             Thread.currentThread().interrupt();
-        } catch (IOException | CsvException  e) {
+        } catch (IOException | CsvException e) {
             log.error("Error to process csv. Details: {}", e.getMessage());
             e.printStackTrace();
         }

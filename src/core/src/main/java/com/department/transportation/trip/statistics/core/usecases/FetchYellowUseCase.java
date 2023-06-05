@@ -1,4 +1,4 @@
-package com.department.transportation.trip.statistics.core.usercase;
+package com.department.transportation.trip.statistics.core.usecases;
 
 import com.department.transportation.trip.statistics.api.dtos.OutListYellowDto;
 import com.department.transportation.trip.statistics.core.services.TaxisService;
@@ -6,6 +6,7 @@ import com.department.transportation.trip.statistics.core.utils.LocalDateTimeUti
 import com.department.transportation.trip.statistics.model.converters.TaxisConverter;
 import com.department.transportation.trip.statistics.model.entities.TaxisEntity;
 import com.department.transportation.trip.statistics.model.entities.ZoneEntity;
+import com.department.transportation.trip.statistics.model.enums.TaxisTypeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
@@ -43,8 +44,8 @@ public class FetchYellowUseCase {
                 .dropOffDatetime(LocalDateTimeUtils.convertFromString(dropOffDatetime))
                 .pickupLocation(nonNull(pickupLocation) ? ZoneEntity.builder().id(pickupLocation).build() : null)
                 .dropOffLocation(nonNull(dropOffLocation) ? ZoneEntity.builder().id(dropOffLocation).build() : null)
+                .taxisType(TaxisTypeEnum.YELLOW)
                 .build();
-
 
         Page<TaxisEntity> taxisEntities = taxisService.fetchTaxisByFilterAndPageable(Example.of(taxisEntity), pageable);
         return taxisEntities.isEmpty() ? Page.empty() : taxisEntities.map(TaxisConverter.convertDBOToDTO);

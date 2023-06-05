@@ -11,17 +11,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet author="Alex Rosa" id="1685918921391-1">
-        <dropColumn tableName="taxis" columnName="id"/>
-
-        <addColumn tableName="taxis">
-            <column autoIncrement="false" name="id" type="uuid">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="taxis_pkey"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
-    <changeSet author="Alex Rosa" id="setup_database-v2">
+    <changeSet author="Alex Rosa" id="new_field_taxis_type_on_taxis-v2">
         <tagDatabase tag="v2"/>
     </changeSet>
 

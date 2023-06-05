@@ -1,4 +1,4 @@
-package com.department.transportation.trip.statistics.core.usercase;
+package com.department.transportation.trip.statistics.core.usecases;
 
 import com.department.transportation.trip.statistics.api.dtos.OutZoneTripDto;
 import com.department.transportation.trip.statistics.api.queryparams.InZoneTripsQueryParam;

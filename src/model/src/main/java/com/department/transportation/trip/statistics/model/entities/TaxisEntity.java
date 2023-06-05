@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.ColumnResult;
@@ -17,6 +17,9 @@ import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
@@ -31,20 +34,20 @@ import java.util.UUID;
  * @since 03/06/2023 12:43
  */
 @NamedNativeQuery(name = "FindTop5ZonesOrderByPickups", query = """
-        select zone_name, pickup, (select count(z) from taxis t join zones z on z.zone = zone_name and z.id = t.drop_off_location_id) as dropoff
-        from (
-            select z1.zone as zone_name, count(z1) as pickup
-            from taxis t join zones z1 on z1.id = t.pickup_location_id group by z1.zone
-            order by count(*) desc limit 5
-        ) as report
+        SELECT report.zone_name, report.pickup, (SELECT COUNT(*) FROM taxis JOIN zones ON zones.zone = report.zone_name AND zones.id = taxis.drop_off_location_id) AS dropoff
+        FROM (
+            SELECT zones.zone AS zone_name, count(*) AS pickup
+            FROM taxis JOIN zones ON zones.id = taxis.pickup_location_id GROUP BY zones.zone
+            ORDER BY COUNT(*) DESC limit 5
+        ) AS report
         """, resultSetMapping = "OutTopZonesDto")
 @NamedNativeQuery(name = "FindTop5ZonesOrderByDropOff", query = """
-        select zone_name, dropoff, (select count(z) from taxis t join zones z on z.zone = zone_name and z.id = t.pickup_location_id) as pickup
-        from (
-            select z1.zone as zone_name, count(z1) as dropoff
-            from taxis t join zones z1 on z1.id = t.drop_off_location_id group by z1.zone
-            order by count(*) desc limit 5
-        ) as report
+        SELECT report.zone_name, report.dropoff, (SELECT COUNT(*) FROM taxis JOIN zones ON zones.zone = report.zone_name AND zones.id = taxis.pickup_location_id) AS pickup
+        FROM (
+            SELECT zones.zone AS zone_name, count(*) AS dropoff
+            FROM taxis JOIN zones ON zones.id = taxis.drop_off_location_id GROUP BY zones.zone
+            ORDER BY count(*) DESC limit 5
+        ) AS report
         """, resultSetMapping = "OutTopZonesDto")
 @SqlResultSetMapping(name = "OutTopZonesDto", classes = {@ConstructorResult(targetClass = OutTopZonesDto.class,
         columns = {
@@ -53,16 +56,15 @@ import java.util.UUID;
                 @ColumnResult(name = "dropoff", type = Long.class)}
 )})
 @NamedNativeQuery(name = "fetchZoneTripsSumsByZoneIdAndDate", query = """
-        select
-        (select count(*) from taxis t where t.drop_off_location_id = :zoneId and date_trunc('day', t.drop_off_datetime) = :date ) as dropoffs,
-        (select count(*) from taxis t where t.pickup_location_id = :zoneId and date_trunc('day', t.drop_off_datetime) = :date) as pickups
+        SELECT
+        (SELECT count(*) FROM taxis WHERE taxis.drop_off_location_id = :zoneId AND date_trunc('day', taxis.drop_off_datetime) = :date ) AS dropoffs,
+        (SELECT count(*) FROM taxis WHERE taxis.pickup_location_id = :zoneId AND date_trunc('day', taxis.pickup_datetime) = :date) AS pickups
         """, resultSetMapping = "OutZoneTripDto")
 @SqlResultSetMapping(name = "OutZoneTripDto", classes = {@ConstructorResult(targetClass = OutZoneTripDto.class,
         columns = {
                 @ColumnResult(name = "dropoffs", type = Long.class),
                 @ColumnResult(name = "pickups", type = Long.class),
         })})
-@ToString(exclude = {"pickupLocation", "dropOffLocation"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -73,6 +75,8 @@ import java.util.UUID;
 public class TaxisEntity extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @Column(nullable = false)
@@ -85,9 +89,18 @@ public class TaxisEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private TaxisTypeEnum taxisType;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ZoneEntity pickupLocation;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ZoneEntity dropOffLocation;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "pickupDatetime = " + pickupDatetime + ", " +
+                "dropOffDatetime = " + dropOffDatetime + ", " +
+                "taxisType = " + taxisType + ")";
+    }
 }
