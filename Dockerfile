@@ -29,4 +29,4 @@ COPY --from=builder /workspace/app/src/application/target/trip-statistics-applic
 EXPOSE 8080
 
 # Run the web service on container startup.
-ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=${PROFILES} --add-opens=java.base/java.lang=ALL-UNNAMED -jar trip-statistics-application.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=${PROFILES} --add-opens=java.base/java.lang=ALL-UNNAMED -jar trip-statistics-application.jar"]

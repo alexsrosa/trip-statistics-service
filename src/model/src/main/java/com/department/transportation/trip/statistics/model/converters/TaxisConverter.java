@@ -1,7 +1,6 @@
 package com.department.transportation.trip.statistics.model.converters;
 
-import com.department.transportation.trip.statistics.api.OutListYellowDto;
-import com.department.transportation.trip.statistics.api.OutTopZonesListDto;
+import com.department.transportation.trip.statistics.api.dtos.OutListYellowDto;
 import com.department.transportation.trip.statistics.model.entities.TaxisEntity;
 import lombok.experimental.UtilityClass;
 import ma.glasnost.orika.MapperFacade;

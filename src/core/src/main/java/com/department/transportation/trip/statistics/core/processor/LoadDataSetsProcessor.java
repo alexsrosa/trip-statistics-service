@@ -3,10 +3,11 @@ package com.department.transportation.trip.statistics.core.processor;
 import com.department.transportation.trip.statistics.core.usercase.ImportTaxisUseCase;
 import com.department.transportation.trip.statistics.core.usercase.ImportZonesUseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  *
@@ -14,6 +15,7 @@ import javax.annotation.PostConstruct;
  * @since 04/06/2023 10:17
  */
 @Profile("!test")
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class LoadDataSetsProcessor {
@@ -21,9 +23,15 @@ public class LoadDataSetsProcessor {
     private final ImportZonesUseCase importZonesUseCase;
     private final ImportTaxisUseCase importTaxisUseCase;
 
-    @PostConstruct
-    public void init() {
-//        importZonesUseCase.importZones();
-//        importTaxisUseCase.importTaxis();
+    @EventListener(ApplicationReadyEvent.class)
+    public void startProcess()  {
+        long startTime = System.currentTimeMillis();
+
+        importZonesUseCase.importZones();
+        importTaxisUseCase.importTaxis();
+
+        long endTime = System.currentTimeMillis();
+        long elapsedTimeInSeconds = (endTime - startTime) / 1000;
+        log.info("Total load processing time: {} seconds ({} minutes)", elapsedTimeInSeconds, elapsedTimeInSeconds / 60);
     }
 }

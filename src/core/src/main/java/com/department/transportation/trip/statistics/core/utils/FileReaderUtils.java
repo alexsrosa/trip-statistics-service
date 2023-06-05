@@ -19,7 +19,6 @@ import static java.util.Objects.isNull;
 public class FileReaderUtils {
 
     public int readFileOnResources(String resourceName, Consumer<String> function, boolean skipFirstLine) throws FileNotFoundException {
-
         if (isNull(resourceName)) {
             throw new IllegalArgumentException();
         }

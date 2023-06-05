@@ -1,11 +1,11 @@
 package com.department.transportation.trip.statistics.controllers;
 
 
-import com.department.transportation.trip.statistics.api.InTopZonesQueryParam;
-import com.department.transportation.trip.statistics.api.InZoneTripsQueryParam;
-import com.department.transportation.trip.statistics.api.OutListYellowDto;
-import com.department.transportation.trip.statistics.api.OutTopZonesListDto;
-import com.department.transportation.trip.statistics.api.OutZoneTripDto;
+import com.department.transportation.trip.statistics.api.dtos.OutListYellowDto;
+import com.department.transportation.trip.statistics.api.dtos.OutTopZonesListDto;
+import com.department.transportation.trip.statistics.api.dtos.OutZoneTripDto;
+import com.department.transportation.trip.statistics.api.queryparams.InTopZonesQueryParam;
+import com.department.transportation.trip.statistics.api.queryparams.InZoneTripsQueryParam;
 import com.department.transportation.trip.statistics.controllers.docs.TripStatisticsControllerDoc;
 import com.department.transportation.trip.statistics.core.usercase.FetchYellowUseCase;
 import com.department.transportation.trip.statistics.core.usercase.TopZonesUseCase;
@@ -27,7 +27,6 @@ import javax.validation.Valid;
  * @author <a href="mailto:alexsros@gmail.com">Alex Rosa</a>
  * @since 04/06/2023 20:13
  */
-//@Validated
 @RequiredArgsConstructor
 @Slf4j
 @RestController
@@ -55,7 +54,7 @@ public class TripStatisticsController implements TripStatisticsControllerDoc {
                                                                      @RequestParam(value = "pu_location", required = false) Long pickupLocation,
                                                                      @RequestParam(value = "do_location", required = false) Long dropOffLocation,
                                                                      Pageable pageable) {
-        return ResponseEntity.ok(fetchYellowUseCase.fetchYellowByParam(
-                id, pickupDatetime, dropOffDatetime, pickupLocation, dropOffLocation, pageable));
+        return ResponseEntity.ok(
+                fetchYellowUseCase.fetchYellowByParam(id, pickupDatetime, dropOffDatetime, pickupLocation, dropOffLocation, pageable));
     }
 }

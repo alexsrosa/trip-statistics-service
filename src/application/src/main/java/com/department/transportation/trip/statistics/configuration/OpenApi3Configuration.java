@@ -41,6 +41,7 @@ public class OpenApi3Configuration {
             mavenMap.put("name", model.getName());
             mavenMap.put("description", model.getDescription());
         } catch (Exception ignored) {
+            // Ignored
         }
         return mavenMap;
     }

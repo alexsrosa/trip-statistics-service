@@ -5,10 +5,8 @@ import com.opencsv.exceptions.CsvException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,42 +26,54 @@ import static java.util.Objects.nonNull;
 @UtilityClass
 public class CSVReaderUtils {
 
-    public long processRead(String resourceName, Consumer<List<String[]>> function, boolean skipFirstLine) {
+    public long processCsvWithSkipFirstLineAndBlockSizeWith5000(String resourceName, Consumer<List<String[]>> action) {
+        return processReadCsv(resourceName, action, true, 5000);
+    }
 
+    public long processReadCsv(String resourceName, Consumer<List<String[]>> action, boolean skipFirstLine, int blockSize) {
         long totalLines = 0L;
 
         try {
-            File file = new File(URI.create(Objects.requireNonNull(CSVReaderUtils.class.getClassLoader().getResource(resourceName)).toString()));
-            CSVReader csvReader = new CSVReader(new FileReader(file));
-
-            // Threads pool configuration
-            int numThreads = Runtime.getRuntime().availableProcessors();
-            ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-
+            CSVReader csvReader = new CSVReader(new InputStreamReader(Objects.requireNonNull(
+                    FileReaderUtils.class.getClassLoader().getResourceAsStream(resourceName + ".csv"))));
             csvReader.skip(skipFirstLine ? 1 : 0);
+
+            ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
             String[] line;
             List<String[]> lines = new ArrayList<>();
 
             while (nonNull((line = csvReader.readNext()))) {
                 lines.add(line);
+                totalLines++;
+
+                if (totalLines % blockSize == 0) {
+                    execute(action, executor, lines);
+                    lines = new ArrayList<>();
+                }
+            }
+
+            if (!lines.isEmpty()) {
+                execute(action, executor, lines);
             }
 
             csvReader.close();
-
-            totalLines = lines.size();
             log.info("Total lines to process: {}", totalLines);
-
-            List<List<String[]>> dividedLinesList = PartitionCollectionsUtils.partitionListWithTotalParts(lines, numThreads);
-            dividedLinesList.forEach(dividedLines -> executor.execute(() -> function.accept(dividedLines)));
 
             executor.shutdown();
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-
-        } catch (IOException | CsvException | InterruptedException e) {
+        } catch (InterruptedException interruptedException){
+            log.error("Error executing process in threads! Details: {}", interruptedException.getMessage());
+            Thread.currentThread().interrupt();
+        } catch (IOException | CsvException  e) {
+            log.error("Error to process csv. Details: {}", e.getMessage());
             e.printStackTrace();
         }
 
         return totalLines;
+    }
+
+    private void execute(Consumer<List<String[]>> action, ExecutorService executor, final List<String[]> lines) {
+        executor.execute(() -> action.accept(lines));
     }
 }

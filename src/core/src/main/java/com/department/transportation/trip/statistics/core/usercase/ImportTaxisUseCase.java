@@ -3,8 +3,8 @@ package com.department.transportation.trip.statistics.core.usercase;
 import com.department.transportation.trip.statistics.core.mappers.TaxisMapper;
 import com.department.transportation.trip.statistics.core.services.TaxisService;
 import com.department.transportation.trip.statistics.core.utils.CSVReaderUtils;
-import com.department.transportation.trip.statistics.core.utils.PartitionCollectionsUtils;
 import com.department.transportation.trip.statistics.model.entities.TaxisEntity;
+import com.department.transportation.trip.statistics.model.repositories.TaxisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,13 +22,16 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 @Component
 public class ImportTaxisUseCase {
+    private final TaxisRepository taxisRepository;
 
-    private final Consumer<List<String[]>> actionSaveNewGreenTaxis = this::saveGreenByString;
-    private final Consumer<List<String[]>> actionSaveNewYellowTaxis = this::saveYellowByString;
+    private final Consumer<List<String[]>> actionSaveNewGreenTaxis = this::saveGreenByArrayString;
+    private final Consumer<List<String[]>> actionSaveNewYellowTaxis = this::saveYellowByArrayString;
 
     private final Map<String, Consumer<List<String[]>>> filesToRead = Map.of("green", actionSaveNewGreenTaxis, "yellow", actionSaveNewYellowTaxis);
 
     private final TaxisService taxisService;
+    private final TopZonesUseCase topZonesUseCase;
+    private final ZoneTripUseCase zoneTripUseCase;
 
     public void importTaxis() {
         log.info(">> Starts to load taxis!");
@@ -38,24 +41,25 @@ public class ImportTaxisUseCase {
 
         filesToRead.forEach((fileName, actionConsumer) -> {
             log.info("Starts reading {} taxis", fileName);
-            long totalLines = CSVReaderUtils.processRead("files/" + fileName + ".csv", actionConsumer, true);
+            long totalLines = CSVReaderUtils.processCsvWithSkipFirstLineAndBlockSizeWith5000("files/" + fileName, actionConsumer);
             log.info("{} {} taxis were imported", totalLines, fileName);
         });
+
+        topZonesUseCase.evictCaches();
+        zoneTripUseCase.evictCaches();
 
         log.info("<< Load yellow finished.");
     }
 
-    private void saveGreenByString(List<String[]> columnsList) {
+    private void saveGreenByArrayString(List<String[]> columnsList) {
         saveAll(TaxisMapper.mapGreenToDbo.apply(columnsList));
     }
 
-    private void saveYellowByString(List<String[]> columnsList) {
+    private void saveYellowByArrayString(List<String[]> columnsList) {
         saveAll(TaxisMapper.mapYellowToDbo.apply(columnsList));
     }
 
     private void saveAll(List<TaxisEntity> taxisEntityList) {
-        PartitionCollectionsUtils.partitionListWithSizeBlockLimited(taxisEntityList, 5000)
-                .parallelStream()
-                .forEach(taxisService::saveAll);
+        taxisRepository.saveAll(taxisEntityList);
     }
 }

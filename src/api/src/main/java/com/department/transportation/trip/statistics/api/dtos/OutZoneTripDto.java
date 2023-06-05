@@ -1,4 +1,4 @@
-package com.department.transportation.trip.statistics.api;
+package com.department.transportation.trip.statistics.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

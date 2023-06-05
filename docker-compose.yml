@@ -15,6 +15,7 @@ services:
       - PASS_DB=DT123@
       - PASS_DB_ADMIN=DT123@
       - LOG_LEVEL=info
+      - JAVA_OPTS=-Xms512m -Xmx4g
     networks:
       - backend
     healthcheck:

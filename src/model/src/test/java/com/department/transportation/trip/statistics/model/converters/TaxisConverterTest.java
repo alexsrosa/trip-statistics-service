@@ -1,7 +1,7 @@
 package com.department.transportation.trip.statistics.model.converters;
 
 
-import com.department.transportation.trip.statistics.api.OutListYellowDto;
+import com.department.transportation.trip.statistics.api.dtos.OutListYellowDto;
 import com.department.transportation.trip.statistics.model.entities.TaxisEntity;
 import com.department.transportation.trip.statistics.model.entities.ZoneEntity;
 import org.junit.jupiter.api.Test;

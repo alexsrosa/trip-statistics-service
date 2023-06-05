@@ -1,6 +1,6 @@
 package com.department.transportation.trip.statistics.core.usercase;
 
-import com.department.transportation.trip.statistics.api.OutListYellowDto;
+import com.department.transportation.trip.statistics.api.dtos.OutListYellowDto;
 import com.department.transportation.trip.statistics.core.services.TaxisService;
 import com.department.transportation.trip.statistics.core.utils.LocalDateTimeUtils;
 import com.department.transportation.trip.statistics.model.converters.TaxisConverter;

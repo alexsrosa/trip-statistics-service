@@ -1,12 +1,16 @@
 package com.department.transportation.trip.statistics.core.usercase;
 
-import com.department.transportation.trip.statistics.api.InTopZonesQueryParam;
-import com.department.transportation.trip.statistics.api.OutTopZonesListDto;
+import com.department.transportation.trip.statistics.api.dtos.OutTopZonesListDto;
 import com.department.transportation.trip.statistics.api.enums.OrderTypeEnum;
+import com.department.transportation.trip.statistics.api.queryparams.InTopZonesQueryParam;
 import com.department.transportation.trip.statistics.core.services.TaxisService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+
+import static java.util.Optional.ofNullable;
 
 /**
  *
@@ -17,9 +21,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class TopZonesUseCase {
 
-    private final TaxisService taxisService;
+    public static final String CACHE_FETCH_TOP_ZONE_BY_ORDER = "CacheFetchTopZoneByOrder";
 
-    @Cacheable(value = "CacheFetchTopZoneByOrder", key = "#inTopZonesQueryParam.order")
+    private final TaxisService taxisService;
+    private final CacheManager cacheManager;
+
+    @Cacheable(value = CACHE_FETCH_TOP_ZONE_BY_ORDER, key = "#inTopZonesQueryParam.order")
     public OutTopZonesListDto fetchTopZoneByOrder(InTopZonesQueryParam inTopZonesQueryParam) {
 
         if (OrderTypeEnum.DROP_OFF.getValue().equals(inTopZonesQueryParam.getOrder())) {
@@ -27,5 +34,11 @@ public class TopZonesUseCase {
         }
 
         return OutTopZonesListDto.builder().topZones(taxisService.findTop5ZonesOrderByPickups()).build();
+    }
+
+    public void evictCaches() {
+        ofNullable(cacheManager.getCache(CACHE_FETCH_TOP_ZONE_BY_ORDER))
+                .ifPresent(Cache::clear);
+
     }
 }

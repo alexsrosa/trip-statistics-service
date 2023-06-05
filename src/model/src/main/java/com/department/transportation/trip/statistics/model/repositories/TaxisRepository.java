@@ -1,7 +1,7 @@
 package com.department.transportation.trip.statistics.model.repositories;
 
-import com.department.transportation.trip.statistics.api.OutTopZonesDto;
-import com.department.transportation.trip.statistics.api.OutZoneTripDto;
+import com.department.transportation.trip.statistics.api.dtos.OutTopZonesDto;
+import com.department.transportation.trip.statistics.api.dtos.OutZoneTripDto;
 import com.department.transportation.trip.statistics.model.entities.TaxisEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

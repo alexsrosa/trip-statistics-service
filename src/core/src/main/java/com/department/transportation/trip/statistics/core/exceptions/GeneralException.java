@@ -17,13 +17,4 @@ public class GeneralException extends RuntimeException {
         super(message);
         log.error(message);
     }
-
-    public GeneralException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public GeneralException(String message, Throwable cause, Logger log) {
-        super(message, cause);
-        log.error(message);
-    }
 }

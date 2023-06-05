@@ -3,7 +3,6 @@ package com.department.transportation.trip.statistics.handler;
 import com.department.transportation.trip.statistics.core.exceptions.BadRequestException;
 import com.department.transportation.trip.statistics.core.exceptions.ExceptionListResponse;
 import com.department.transportation.trip.statistics.core.exceptions.ExceptionResponse;
-import com.department.transportation.trip.statistics.core.exceptions.NotFoundException;
 import com.department.transportation.trip.statistics.core.exceptions.ZoneNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,12 +30,14 @@ import static java.nio.file.Paths.get;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+    public static final String S_S = "%s %s";
+
     @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<ExceptionResponse> handleBadRequestException(RuntimeException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler({NotFoundException.class, ZoneNotFoundException.class})
+    @ExceptionHandler({ZoneNotFoundException.class})
     public ResponseEntity<ExceptionResponse> handleNotFoundException(RuntimeException ex, WebRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(ex.getMessage()));
     }
@@ -50,7 +51,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
         List<String> details = new ArrayList<>(List.of());
         ex.getConstraintViolations()
-                .forEach(c -> details.add(String.format("%s %s", c.getPropertyPath().toString(), get(c.getMessage()))));
+                .forEach(c -> details.add(String.format(S_S, c.getPropertyPath().toString(), get(c.getMessage()))));
         return ResponseEntity.badRequest().body(new ExceptionListResponse(details.stream().sorted().toList()));
     }
 
@@ -70,11 +71,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         List<String> details = new ArrayList<>(List.of());
 
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            details.add(String.format("%s %s", error.getField(), (error.isBindingFailure() ? "Invalid type" : get(error.getDefaultMessage()))));
+            details.add(String.format(S_S, error.getField(), (error.isBindingFailure() ? "Invalid type" : get(error.getDefaultMessage()))));
         }
 
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-            details.add(String.format("%s %s", error.getObjectName(), error.getDefaultMessage()));
+            details.add(String.format(S_S, error.getObjectName(), error.getDefaultMessage()));
         }
 
         return ResponseEntity.badRequest().body(new ExceptionListResponse(details.stream().sorted().toList()));

@@ -1,11 +1,11 @@
 package com.department.transportation.trip.statistics.controllers.docs;
 
 
-import com.department.transportation.trip.statistics.api.InTopZonesQueryParam;
-import com.department.transportation.trip.statistics.api.InZoneTripsQueryParam;
-import com.department.transportation.trip.statistics.api.OutListYellowDto;
-import com.department.transportation.trip.statistics.api.OutTopZonesListDto;
-import com.department.transportation.trip.statistics.api.OutZoneTripDto;
+import com.department.transportation.trip.statistics.api.dtos.OutListYellowDto;
+import com.department.transportation.trip.statistics.api.dtos.OutTopZonesListDto;
+import com.department.transportation.trip.statistics.api.dtos.OutZoneTripDto;
+import com.department.transportation.trip.statistics.api.queryparams.InTopZonesQueryParam;
+import com.department.transportation.trip.statistics.api.queryparams.InZoneTripsQueryParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

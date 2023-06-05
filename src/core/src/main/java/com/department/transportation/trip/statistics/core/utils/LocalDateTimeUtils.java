@@ -28,6 +28,7 @@ public class LocalDateTimeUtils {
             try {
                 return LocalDateTime.parse(date, formatter);
             } catch (Exception ignored) {
+                // Ignored
             }
         }
 

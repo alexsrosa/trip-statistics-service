@@ -1,31 +1,29 @@
-package com.department.transportation.trip.statistics.api;
+package com.department.transportation.trip.statistics.api.queryparams;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  *
  * @author <a href="mailto:alexsros@gmail.com">Alex Rosa</a>
- * @since 04/06/2023 20:16
+ * @since 05/06/2023 03:18
  */
 @ToString
 @EqualsAndHashCode
-@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OutTopZonesListDto {
+public class InTopZonesQueryParam {
 
-    @JsonProperty("top_zones")
-    private List<OutTopZonesDto> topZones;
-
+    @NotBlank
+    @Pattern(regexp = "(dropoffs|pickups)")
+    private String order;
 }

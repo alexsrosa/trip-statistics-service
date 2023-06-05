@@ -1,6 +1,5 @@
 package com.department.transportation.trip.statistics.core.exceptions;
 
-import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -13,9 +12,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BadRequestException extends GeneralException {
     public BadRequestException(String message) {
         super(message);
-    }
-
-    public BadRequestException(String message, Logger logger) {
-        super(message, logger);
     }
 }
